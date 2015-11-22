@@ -3,6 +3,9 @@ var util = require('util');
 var Property = require('./property');
 var Pattern = require('./pattern');
 var utils = require('./utils');
+var Predicate = require('./predicate');
+var pOps=require('./predicate_operation');
+var ReturnObj=require('./return')
 
 function Node(options){
     this.property=[];
@@ -23,7 +26,7 @@ Node.prototype.define = function (config){
     }
     for(key in config.property){
 	var prop=this.createProperty(config.property[key]);
-	this.property[config.property[key]]=prop;
+	this[config.property[key]]=prop;
     }    
     return this;
 }
@@ -64,19 +67,45 @@ Node.prototype.isValidProperty = function (propName){
     }
 }
 
-// identifier
-// Type
-// extra things
-// direction
-Node.prototype.relatedTo = function (direction,opts){
+Node.prototype.relatedTo = function (relation,othernode){
     var pattern=new Pattern(this);
-    pattern.addNode(this).addRelation(direction,opts);
+    pattern.addNode(this).addRelation(relation).addNode(othernode);
     return pattern;
 }
 
 Node.prototype.identifier = function(identifier){
     this._identifier=identifier;
     return this;
+}
+
+Node.prototype.toPredicate = function(){
+    var p = new Predicate({left:this._identifier});
+    return p;
+}
+
+Node.prototype.equals= pOps.operators.equals;
+
+Node.prototype.returnObj = function(){
+    var r=new ReturnObj(this._identifier);
+    return r;
+}
+
+Node.prototype.distinct = function(){
+    var r=new ReturnObj(this._identifier);
+    r=r.distinct();
+    return r;
+}
+
+Node.prototype.count = function(){
+    var r=new ReturnObj(this._identifier);
+    r=r.count();
+    return r;
+}
+
+Node.prototype.as = function(str){
+    var r=new ReturnObj(this._identifier);
+    r=r.as(str);
+    return r;
 }
 
 module.exports=Node;

@@ -6,24 +6,31 @@ var Node = require('./node');
 function Pattern(){
     this._string='';
 }
-
+/**
+ *makes empty node string when no node provided
+ */
 Pattern.prototype.addNode = function(node){
     var str=' ( ';
-    if(node._identifier){
+    if(node && node._identifier){
 	str+= node._identifier;
     }
-    if(node._label){
+    if(node && node._label){
 	node._label.forEach(function (eachLabel){
 	    str+= ': '+eachLabel;    
 	});
     }
-    if(node.property && Object.keys(node._values).length){
+    if(node && node.property && Object.keys(node._values).length){
 	str+=' { ';
 	if(util.isArray(node.property)){
 	    var propKeys=Object.keys(node.property);
 	    for(var i=0;i<propKeys.length;i++){
-		console.log(propKeys[i],node.property[propKeys[i]])
-		str+= ' "'+propKeys[i]+ '": "'+node._values[propKeys[i]]+ '"';
+		if(typeof node._values[propKeys[i]] !== 'string'){
+		    str+= ' '+propKeys[i]+ ': '+node._values[propKeys[i]]+ '';
+		}
+		else{
+		    str+= ' '+propKeys[i]+ ': "'+node._values[propKeys[i]]+ '"';
+		}
+		
 		if(propKeys[i+1] !==undefined && propKeys[i+1] !==null ){
 		    str+=' , ';
 		}
@@ -39,9 +46,8 @@ Pattern.prototype.addNode = function(node){
     return this;
 }
 
-
 Pattern.prototype.addRelation = function(relation){
-    var direction=relation.direction;
+    var direction=relation._direction;
     var str='-[ ';
     if(relation._identifier){
 	str+=relation._identifier;
@@ -56,8 +62,7 @@ Pattern.prototype.addRelation = function(relation){
 	    if(relation._type[i+1]){
 		str+=' | ';
 	    }
-	}
-	
+	}	
     }
     str+=' ]-'
     if(direction){
@@ -71,6 +76,7 @@ Pattern.prototype.addRelation = function(relation){
 	}
     }
     this._string+=str;
+    return this;
 }
 
 Pattern.prototype.toString = function(){
