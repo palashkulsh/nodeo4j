@@ -10,6 +10,9 @@ String.prototype.toPredicate=function(){
     return new Predicate({left:'"'+this.toString()+'"'});
 }
 
+// Array.prototype.toPredicate = function(){
+//     return new Predicate({left:' ['+this.toString()+' ]'});
+// }
 //TODO how to create predicate for general object
 //dont use general prototype for object as it breaks
 // Object.prototype.toPredicate=function(){
@@ -49,14 +52,16 @@ var predicateOperations={
     },
     inMethod: function(){
 	return function(val){
-	    return new Predicate({
+	    var str={left:'['+val.toString()+']'};
+	    var v=new Predicate(str);
+	    var opts={
 		left:this.toPredicate(),
-		operator:operator,
-		right:val
-	    });
-	}
-    },
-    
+		operator:' IN ',
+		 right:v
+	     };
+	     return new Predicate(opts);
+	 }
+     },    
 };
 
 module.exports=predicateOperations;
@@ -102,8 +107,8 @@ predicateOperations.operators ={
 	ilike       : predicateOperations.binaryMethod('ILIKE'),
 	notIlike    : predicateOperations.binaryMethod('NOT ILIKE'),
 	match      : predicateOperations.binaryMethod('@@'),
-	// 	in         : predicateOperations.inMethod,
-	// notIn      : predicateOperations.notInMethod,
+		In         : predicateOperations.inMethod(),
+	//notIn      : predicateOperations.notInMethod(),
 	// between    : predicateOperations.ternaryMethod('BETWEEN', 'AND'),
 	// notBetween : predicateOperations.ternaryMethod('NOT BETWEEN', 'AND'),
 	// at         : predicateOperations.atMethod,

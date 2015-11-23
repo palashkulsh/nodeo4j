@@ -1,4 +1,6 @@
 
+//var operators = require('./predicate_operation').operators;
+
 /**
    {
    left:this.toPredicateNode(),
@@ -28,5 +30,11 @@ Predicate.prototype.toString = function(){
     this._string=str;
     return this._string;
 }
+
+Predicate.prototype.toPredicate = function (){
+    return this;
+}
+
+//Predicate.prototype.and = operators.and;
 
 module.exports=Predicate;

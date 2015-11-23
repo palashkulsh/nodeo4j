@@ -21,6 +21,9 @@ Node.prototype.define = function (config){
     if(config.label){
 	this._label.push.apply(this._label,config.label);
     }
+    if(config.identifier){
+	this._identifier=config.identifier.toString();
+    }
     if(!config.property || !util.isArray(config.property)){
 	return this;
     }
@@ -59,6 +62,12 @@ Node.prototype.withValues = function (filters){
 	this._values=finalFilter;
     }
     return this;
+}
+
+Node.prototype.toString  = function(){
+    var pattern=new Pattern();
+    pattern.addNode(this);
+    return pattern.toString();
 }
 
 Node.prototype.isValidProperty = function (propName){
