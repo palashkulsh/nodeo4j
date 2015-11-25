@@ -29,7 +29,6 @@ Node.prototype.define = function (config){
     }
     for(key in config.property){
 	var prop=this.createProperty(config.property[key]);
-	this[config.property[key]]=prop;
     }    
     return this;
 }
@@ -42,7 +41,13 @@ Node.prototype.createProperty = function (prop){
 	prop.node=this;
 	prop = new Property(prop);
     }
-    return prop;
+    if(prop){
+	var name=prop.getName();
+	this[name]=prop;
+	if(this.property.indexOf(name)<0){
+	    this.property.push(name);
+	}
+    }
 }
 
 /**
@@ -52,7 +57,10 @@ Node.prototype.withValues = function (filters){
     if(filters){
 	var finalFilter={};
 	for(key in filters){
-	    if(this.property[key] ){
+	    if(this[key] ){
+		if(this.property.indexOf(key)<0){
+		    this.property.push(key);
+		}	
 		finalFilter[key]=filters[key];
 	    }
 	    else{
@@ -71,7 +79,7 @@ Node.prototype.toString  = function(){
 }
 
 Node.prototype.isValidProperty = function (propName){
-    if(this.property[propName]){
+    if(this[propName]){
 	return true;
     }
 }

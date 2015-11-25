@@ -31,6 +31,9 @@ Property.prototype.toPredicate = function(){
     return new Predicate({left:this.toString()});
 }
 
+Property.prototype.getName = function(){
+    return this._name;
+}
 
 Property.prototype.returnObj = function(){
     var r=new ReturnObj(this.toString());

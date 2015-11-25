@@ -22,7 +22,7 @@ Pattern.prototype.addNode = function(node){
     if(node && node.property && Object.keys(node._values).length){
 	str+=' { ';
 	if(util.isArray(node.property)){
-	    var propKeys=Object.keys(node.property);
+	    var propKeys=node.property;
 	    for(var i=0;i<propKeys.length;i++){
 		if(typeof node._values[propKeys[i]] !== 'string'){
 		    str+= ' '+propKeys[i]+ ': '+node._values[propKeys[i]]+ '';
